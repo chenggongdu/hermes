@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>教育客服小助手</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+    <script type="text/javascript">
+        const socket = io();
+
+        socket.on('connect', function () {
+            console.log('Connected to WebSocket');
+            // 加入房间
+            socket.emit('join', {room: socket.id});
+            displayMessage('您好，您是要咨询什么信息吗？')
+        });
+
+
+        socket.on('response', function (message) {
+            displayMessage(message);
+        });
+
+        socket.on('disconnect', function () {
+            console.log('Disconnected from WebSocket');
+            // 离开房间
+            socket.emit('leave', {room: socket.id});
+        });
+
+        let isFirstMessage = true;
+
+        function sendMessage() {
+            let messageInput = document.getElementById('messageInput');
+            let message = messageInput.value;
+            if (message.trim() === '') {
+                showToast("输入不可为空");
+                return
+            }
+            socket.send(message);
+            displayUserMessage(message)
+            messageInput.value = '';
+            isFirstMessage = true
+        }
+
+
+        function displayMessage(message) {
+            let messageContainer = document.getElementById('messageContainer');
+            if (isFirstMessage) {
+                isFirstMessage = false;
+                message = "客服: " + message;
+            }
+            let messageText = document.createTextNode(message);
+            messageContainer.appendChild(messageText);
+        }
+
+        function displayUserMessage(message) {
+            {#let now = new Date();#}
+            {#let timeString = now.toLocaleTimeString();#}
+            let messageContainer = document.getElementById('messageContainer');
+            let userDiv = document.createElement('div');
+            userDiv.innerText = "You: " + message;
+            messageContainer.appendChild(userDiv);
+
+            let aiDiv = document.createElement('div');
+            messageContainer.appendChild(aiDiv);
+        }
+
+        function handleKeyDown(event) {
+            if (event.keyCode === 13) {
+                sendMessage();
+            }
+        }
+
+        function showPopup() {
+            document.getElementById("popup").style.display = "block";
+        }
+
+        function hidePopup() {
+            document.getElementById("popup").style.display = "none";
+        }
+
+        function showToast(message) {
+            let toast = document.getElementById("toast");
+            toast.innerText = message;
+            toast.style.display = "block";
+            setTimeout(function () {
+                toast.style.display = "none";
+            }, 2000);
+        }
+
+        function addQuestion() {
+            let question = document.getElementById("questionInput").value;
+            let answer = document.getElementById("answerInput").value;
+            console.log(question)
+            console.log(answer)
+            if (question === "" || answer === "") {
+                showToast("问题和答案不能为空");
+                return;
+            }
+            // 处理添加常见问题的逻辑
+            let data = {
+                question: question,
+                answer: answer
+            };
+
+            let xhr = new XMLHttpRequest();
+            xhr.open('POST', '/add_question', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    let response = JSON.parse(xhr.responseText);
+                    showToast(response.message);
+                    hidePopup();
+                } else if (xhr.readyState === 4 && xhr.status !== 200) {
+                    let errorResponse = JSON.parse(xhr.responseText);
+                    showToast(errorResponse.error);
+                }
+            };
+            xhr.send(JSON.stringify(data));
+            hidePopup();
+        }
+    </script>
+
+    <style>
+        .popup-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 40px;
+            border: 1px solid #ccc;
+        }
+
+        .toast {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<h1>教育客服小助手</h1>
+<div>
+    <input type="text" id="messageInput" onkeydown="handleKeyDown(event)">
+    <button onclick="sendMessage()">发送</button>
+    <button onclick="showPopup()">添加FAQ</button>
+</div>
+<div id="messageContainer"></div>
+
+<div id="popup" style="display: none;" class="popup-container">
+    <h3>添加常见问题</h3>
+    <label for="questionInput">问题:</label>
+    <input type="text" id="questionInput" maxlength="30"><br><br>
+    <label for="answerInput">答案:</label>
+    <textarea id="answerInput" maxlength="150"></textarea><br><br>
+    <button onclick="addQuestion()">添加</button>
+    <button onclick="hidePopup()">取消</button>
+</div>
+
+<div id="toast" class="toast"></div>
+</body>
+</html>
