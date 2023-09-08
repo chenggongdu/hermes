@@ -12,7 +12,7 @@ loader = PyPDFLoader(file_path)
 pages = loader.load_and_split()
 
 embeddings = OpenAIEmbeddings()
-index_name = "jz-course"
+index_name = "hermes-pd"
 docsearch = Pinecone.from_documents(pages, embeddings, index_name=index_name)
 
 query = "建筑是什么"

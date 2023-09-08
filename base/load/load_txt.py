@@ -14,7 +14,7 @@ documents = loader.load()
 text_splitter = CharacterTextSplitter(chunk_size=200, chunk_overlap=0)
 docs = text_splitter.split_documents(documents)
 embeddings = OpenAIEmbeddings()
-index_name = "youlu"
+index_name = "hermes-pd"
 docsearch = Pinecone.from_documents(docs, embeddings, index_name=index_name)
 
 # if you already have an index, you can load it like this

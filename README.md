@@ -30,10 +30,5 @@ pip install -r requirements.txt
 
 #### 效果展示
 
-- 常规问答
-![image](data/img/Snipaste_demo1.png)
-- 添加问题后问答
-![image](data/img/Snipaste_demo2.png)
-
 #### 贡献
 - 欢迎大家提出issue和pr
