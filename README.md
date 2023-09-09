@@ -29,6 +29,8 @@ pip install -r requirements.txt
 - 「Pinecone」: https://www.pinecone.io/
 
 #### 效果展示
-
+![image](data/img/iShot_2023-09-09_21.58.03.png)
 #### 贡献
 - 欢迎大家提出issue和pr
+- [github]https://github.com/chenggongdu/hermes
+- [gitee]https://gitee.com/Edon-Du/hermes
