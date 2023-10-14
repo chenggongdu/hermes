@@ -3,6 +3,7 @@ from langchain.document_loaders import PyPDFLoader
 from langchain.vectorstores import Pinecone
 from langchain.embeddings.openai import OpenAIEmbeddings
 from config.setting import Setting
+from config.pinecone_setting import index_name
 
 Setting()
 
@@ -12,7 +13,6 @@ loader = PyPDFLoader(file_path)
 pages = loader.load_and_split()
 
 embeddings = OpenAIEmbeddings()
-index_name = "hermes-pd"
 docsearch = Pinecone.from_documents(pages, embeddings, index_name=index_name)
 
 query = "建筑是什么"

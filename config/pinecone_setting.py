@@ -1,8 +1,9 @@
 import pinecone
 
 # youlu
-api_key = 'xxx'
+api_key = 'XX'
 environment = 'us-west4-gcp-free'
+index_name = 'hermes-pd'
 
 
 class PineconeSetting:

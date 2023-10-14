@@ -4,6 +4,7 @@ from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import Pinecone
 from langchain.document_loaders import TextLoader
 from config.setting import Setting
+from config.pinecone_setting import index_name
 
 Setting()
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -14,7 +15,6 @@ documents = loader.load()
 text_splitter = CharacterTextSplitter(chunk_size=200, chunk_overlap=0)
 docs = text_splitter.split_documents(documents)
 embeddings = OpenAIEmbeddings()
-index_name = "hermes-pd"
 docsearch = Pinecone.from_documents(docs, embeddings, index_name=index_name)
 
 # if you already have an index, you can load it like this
