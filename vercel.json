@@ -1,0 +1,30 @@
+{
+    "github": {
+        "silent": true
+    },
+      "builds": [
+        { "src": "app.py", "use": "@now/python" }
+    ],
+      "routes": [
+        { "src": "/(.*)", "dest": "app.py" }
+    ],
+    "headers": [
+        {
+            "source": "/(.*)",
+            "headers": [
+                {
+                    "key": "X-Real-IP",
+                    "value": "$remote_addr"
+                },
+                {
+                    "key": "X-Forwarded-For",
+                    "value": "$proxy_add_x_forwarded_for"
+                },
+                {
+                    "key": "Host",
+                    "value": "$http_host"
+                }
+            ]
+        }
+    ]
+}
