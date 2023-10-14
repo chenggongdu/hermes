@@ -4,9 +4,18 @@
 #### 项目介绍
 - 项目采用flask+socketio+pinecone+langchain+openai实现的一个定制化问答系统
 - 支持流式问答
+- 支持在线动态构建增量知识库
 
 #### 部署步驟
+1. 安装包
 pip install -r requirements.txt
+2. 更换config.openai_setting.py文件中的 api_key 与 个人代理地址
+3. 更换config.pinecone_setting.py文件中的api_key
+附申请地址: https://www.pinecone.io/
+   ![image](data/img/pinecone.png)
+
+4. 执行load_txt.py文件导入数据(控制台无错误即表示导入完成，可查看pinecone数据库核验)
+5. 启动app.py在线实现流式问答与添加问答知识库
 
 #### 项目目录说明
 - base: 基础模块-存放了项目的基础类
